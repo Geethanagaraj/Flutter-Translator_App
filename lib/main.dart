@@ -1,111 +1,148 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  // Define your custom colors
+  static const Color darkGray = Color(0xFF4A4A4A);
+  static const Color lightGray = Color(0xFFCBCBCB);
+  static const Color softYellow = Color(0xFFFFFFE3);
+  static const Color blueGray = Color(0xFF6D8196);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Smart Translator App',
+      debugShowCheckedModeBanner: false,
+      title: 'Translator App',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
-        useMaterial3: true, // modern look
+        scaffoldBackgroundColor: softYellow,
+        primaryColor: darkGray,
+        textTheme: GoogleFonts.spaceGroteskTextTheme(
+          Theme.of(context).textTheme.apply(
+                bodyColor: darkGray,
+                displayColor: darkGray,
+              ),
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: blueGray,
+            foregroundColor: softYellow,
+            padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30),
+            ),
+            textStyle: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
+            ),
+          ),
+        ),
       ),
-      home: const HomeScreen(),
+      home: LandingPage(),
     );
   }
 }
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
-
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  int _selectedIndex = 0;
-
-  // Screens for 4 sections
-  final List<Widget> _screens = [
-    const TranslateScreen(),
-    const RewriteScreen(),
-    const InsightsScreen(),
-    const ToneScreen(),
-  ];
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
+class LandingPage extends StatelessWidget {
+  // Reuse colors
+  static const Color darkGray = Color(0xFF4A4A4A);
+  static const Color lightGray = Color(0xFFCBCBCB);
+  static const Color softYellow = Color(0xFFFFFFE3);
+  static const Color blueGray = Color(0xFF6D8196);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _screens[_selectedIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-        type: BottomNavigationBarType.fixed,
-        selectedItemColor: Colors.blueAccent,
-        unselectedItemColor: Colors.grey,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.translate),
-            label: 'Translate',
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [softYellow, blueGray.withOpacity(0.2)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.edit),
-            label: 'Rewrite',
+        ),
+        child: SafeArea(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // App Logo & Name
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.translate, size: 40, color: darkGray),
+                  SizedBox(width: 10),
+                  Text(
+                    "Translatr",
+                    style: TextStyle(
+                      color: darkGray,
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 10),
+              // Tagline
+              Text(
+                "Your personal language assistant",
+                style: TextStyle(
+                  color: lightGray,
+                  fontSize: 16,
+                ),
+              ),
+              SizedBox(height: 40),
+              // Feature Cards
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: GridView.count(
+                  shrinkWrap: true,
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 20,
+                  mainAxisSpacing: 20,
+                  children: [
+                    featureCard(Icons.language, "Translate"),
+                    featureCard(Icons.edit, "Rewrite"),
+                    featureCard(Icons.analytics, "Word Insights"),
+                    featureCard(Icons.record_voice_over, "Tone Adjust"),
+                  ],
+                ),
+              ),
+              SizedBox(height: 40),
+              // Start Now Button
+              ElevatedButton(
+                onPressed: () {
+                  print("Start Now tapped");
+                },
+                child: Text("Start Now"),
+              ),
+            ],
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.menu_book),
-            label: 'Insights',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.wb_sunny),
-            label: 'Tone',
+        ),
+      ),
+    );
+  }
+
+  // Feature Card Widget
+  Widget featureCard(IconData icon, String title) {
+    return Container(
+      decoration: BoxDecoration(
+        color: blueGray.withOpacity(0.2),
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(icon, size: 40, color: darkGray),
+          SizedBox(height: 10),
+          Text(
+            title,
+            style: TextStyle(color: darkGray, fontSize: 16),
           ),
         ],
       ),
     );
-  }
-}
-
-// Placeholder Screens
-class TranslateScreen extends StatelessWidget {
-  const TranslateScreen({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return const Center(child: Text("Translate Section"));
-  }
-}
-
-class RewriteScreen extends StatelessWidget {
-  const RewriteScreen({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return const Center(child: Text("Rewrite Section"));
-  }
-}
-
-class InsightsScreen extends StatelessWidget {
-  const InsightsScreen({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return const Center(child: Text("Insights Section"));
-  }
-}
-
-class ToneScreen extends StatelessWidget {
-  const ToneScreen({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return const Center(child: Text("Tone Adjust Section"));
   }
 }
